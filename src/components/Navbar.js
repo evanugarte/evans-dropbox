@@ -13,17 +13,19 @@ import {
   DropdownToggle,
   DropdownMenu
 } from "reactstrap";
-import { handleLogout } from "../backend/AuthFunctions";
 
 class Navigation extends Component {
-  state = {
-    isOpen: false,
-    dropdownOpen: false,
-    navLinks: [
-      { name: "Upload File", link: "upload" },
-      { name: "View Files", link: "/" },
-    ]
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      isOpen: false,
+      dropdownOpen: false,
+      navLinks: [
+        { name: "Upload File", link: "upload" },
+        { name: "View Files", link: "/" },
+      ]
+    };
+  }
 
   toggle = () => {
     this.setState({ isOpen: !this.state.isOpen });
@@ -33,6 +35,33 @@ class Navigation extends Component {
     this.setState({ dropdownOpen: !this.state.dropdownOpen });
   };
 
+  getDropDown = () => {
+    if (this.props.authed) {
+      return (
+        <Dropdown
+          navbar="true"
+          isOpen={this.state.dropdownOpen}
+          toggle={this.toggleDropdown}
+        >
+          <DropdownToggle navbar="true" caret>
+            Account Options
+                </DropdownToggle>
+          <DropdownMenu dark="true">
+            <DropdownItem>
+              <NavLink
+                onClick={this.props.handleLogout}
+                href="/login">
+                Log out
+                        </NavLink>
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      );
+    } else {
+      return <p />;
+    }
+  }
+
   render() {
     return (
       <Navbar color="dark" dark={true} expand="sm">
@@ -40,7 +69,7 @@ class Navigation extends Component {
           <NavbarBrand href="/">172 Project 1</NavbarBrand>
           <Collapse isOpen={this.state.isOpen} navbar={true}>
             <Nav className="mr-auto" navbar>
-              {this.state.navLinks.map((option, index) => {
+              {this.props.authed && this.state.navLinks.map((option, index) => {
                 return (
                   <NavItem key={index}>
                     <NavLink href={option.link}>{option.name}</NavLink>
@@ -50,24 +79,7 @@ class Navigation extends Component {
             </Nav>
 
             <Nav className="ml-auto" nav="true">
-              <Dropdown
-                navbar="true"
-                isOpen={this.state.dropdownOpen}
-                toggle={this.toggleDropdown}
-              >
-                <DropdownToggle navbar="true" caret>
-                  Account Options
-                </DropdownToggle>
-                <DropdownMenu dark="true">
-                      <DropdownItem>
-                        <NavLink
-                          onClick={handleLogout}
-                          href="/login">
-                            Log out
-                        </NavLink>
-                      </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
+              {this.getDropDown()}
             </Nav>
           </Collapse>
           <NavbarToggler onClick={this.toggle} />

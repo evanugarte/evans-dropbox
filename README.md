@@ -28,3 +28,6 @@
 - RDS table
 - FB + Google Login 
 
+## Stopped at
+- https://serverless-stack.com/chapters/load-the-state-from-the-session.html
+  - update state somehow lol

@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import Routing from "./components/Routing";
-import Amplify from "aws-amplify";
+import Navbar from "./components/Navbar";
+import Amplify, { Auth } from "aws-amplify";
 import config from "./backend/config";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, withRouter } from "react-router-dom";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -22,20 +23,47 @@ Amplify.configure({
   }
 });
 
-function App() {
+function App(props) {
 
   const [authenticated, setAuthenticated] = useState(false);
+  const [isAuthenticating, setIsAuthenticating] = useState(true);
+
+  useEffect(() => {
+    getAuthStatus();
+  });
+
+  async function getAuthStatus() {
+    try {
+      await Auth.currentSession();
+      setAuthenticated(true);
+    }
+    catch (e) {
+      if (e !== 'No current user') {
+        alert(e);
+      }
+    }
+    setIsAuthenticating(false);
+  }
+
+
+  async function handleLogout() {
+    await Auth.signOut();
+    setAuthenticated(false);
+    props.history.push("/login");
+  }
 
   return (
+    !isAuthenticating &&
     <div className="App">
       <BrowserRouter>
+        <Navbar authed={authenticated} handleLogout={handleLogout} />
         <Routing appProps={{ authenticated, setAuthenticated }} />
       </BrowserRouter>
     </div>
   );
 }
 
-export default App;
+export default withRouter(App);
 
 
 ReactDOM.render(<App />, document.getElementById("root"));

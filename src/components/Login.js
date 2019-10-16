@@ -1,13 +1,18 @@
 import React, { useState } from "react";
-import { Container, Button, FormGroup, Input, Label } from "reactstrap";
+import {
+  Container,
+  Button,
+  FormGroup,
+  Input,
+  Label,
+  Spinner
+} from "reactstrap";
 import { Auth } from "aws-amplify";
 
 function LoginView(props) {
-  console.log("inside login wassup", props);
-  
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const forms = [
     { text: "Email", name: "email", callback: setEmail },
@@ -15,13 +20,15 @@ function LoginView(props) {
   ];
 
   async function handleSignIn() {
-
+    setLoading(true);
     try {
       await Auth.signIn(email, password);
       props.setAuthenticated(true);
       alert("Logged in");
+      props.history.push("/");
     } catch (e) {
       alert(e.message);
+      setLoading(false);
     }
   }
 
@@ -47,13 +54,15 @@ function LoginView(props) {
         })}
         <Button
           block
-          disabled={!formEmpty()}
+          disabled={!formEmpty() || loading}
           type="submit"
           onClick={() => handleSignIn(email, password)}
         >
-          Login
-          </Button>
+          {loading ? <Spinner color="primary" /> : "Login"}
+        </Button>
       </form>
+      <br />
+      <a href="signup">New user? Sign up here!</a>
     </Container>
   );
 }
