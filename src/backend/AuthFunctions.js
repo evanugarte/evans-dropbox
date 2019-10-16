@@ -8,3 +8,20 @@ export async function handleSignIn(email, password) {
     alert(e.message);
   }
 }
+
+export async function handleLogout() {
+  await Auth.signOut();
+}
+
+export async function getAuthStatus() {
+  try {
+    await Auth.currentSession();
+    return true;
+  }
+  catch (e) {
+    if (e !== 'No current user') {
+      alert(e);
+    }
+  }
+  return false;
+}

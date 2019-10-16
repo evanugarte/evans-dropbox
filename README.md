@@ -15,6 +15,8 @@
 
 [facebook and google sign in](https://medium.com/wolox-driving-innovation/integrating-social-media-to-your-app-with-aws-cognito-8943329aa89b)
 
+[tokens over state variables for react](https://stackoverflow.com/questions/49819183/react-what-is-the-best-way-to-handle-login-and-authentication)
+
 
 - pool id: us-west-2_UdZYHtMrO
 - Pool ARN: arn:aws:cognito-idp:us-west-2:907407725874:userpool/us-west-2_UdZYHtMrO

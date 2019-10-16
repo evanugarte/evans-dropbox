@@ -13,6 +13,7 @@ import {
   DropdownToggle,
   DropdownMenu
 } from "reactstrap";
+import { handleLogout } from "../backend/AuthFunctions";
 
 class Navigation extends Component {
   state = {
@@ -21,9 +22,6 @@ class Navigation extends Component {
     navLinks: [
       { name: "Upload File", link: "upload" },
       { name: "View Files", link: "/" },
-    ],
-    accountOptions: [
-      { name: "Log Out", link: "/login" }
     ]
   };
 
@@ -61,16 +59,13 @@ class Navigation extends Component {
                   Account Options
                 </DropdownToggle>
                 <DropdownMenu dark="true">
-                  {this.state.accountOptions.map((option, index) => {
-                    return (
-                      <DropdownItem key={index}>
+                      <DropdownItem>
                         <NavLink
-                          href={option.link}>
-                          {option.name}
+                          onClick={handleLogout}
+                          href="/login">
+                            Log out
                         </NavLink>
                       </DropdownItem>
-                    );
-                  })}
                 </DropdownMenu>
               </Dropdown>
             </Nav>

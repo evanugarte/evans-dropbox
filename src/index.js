@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import Routing from "./components/Routing";
-import Amplify, { Auth } from "aws-amplify";
+import Amplify from "aws-amplify";
 import config from "./backend/config";
 import { BrowserRouter } from "react-router-dom";
 import "./App.css";
@@ -22,44 +22,17 @@ Amplify.configure({
   }
 });
 
-class App extends React.Component {
+function App() {
 
-  state = {
-    authenticated: false,
-    isAuthenticating: false
-  }
+  const [authenticated, setAuthenticated] = useState(false);
 
-  async componentDidMount() {
-    console.log("doodoo haha");
-    
-    this.setState({
-      isAuthenticating: true
-    });
-    try {
-      await Auth.currentSession();
-      this.setState({
-        authenticated: true
-      });
-    }
-    catch (e) {
-      if (e !== 'No current user') {
-        alert(e);
-      }
-    }
-    this.setState({
-      isAuthenticating: false
-    });
-  }
-
-  render() {
-    return (
-      <div className="App">
-        <BrowserRouter>
-          <Routing />
-        </BrowserRouter>
-      </div>
-    );
-  }
+  return (
+    <div className="App">
+      <BrowserRouter>
+        <Routing appProps={{ authenticated, setAuthenticated }} />
+      </BrowserRouter>
+    </div>
+  );
 }
 
 export default App;
