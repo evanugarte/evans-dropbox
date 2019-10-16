@@ -1,7 +1,7 @@
 // https://medium.com/@khelif96/uploading-files-from-a-react-app-to-aws-s3-the-right-way-541dd6be689
 import React from "react";
 import { Container, Button, Row } from "reactstrap";
-import { handleUpload, sign_s3 } from "../backend/backend";
+import { handleUpload, sign_s3 } from "../backend/S3Functions";
 
 class UploadView extends React.Component {
 

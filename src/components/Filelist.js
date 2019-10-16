@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Container, ListGroup } from "reactstrap";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
+import { getObjects } from "../backend/S3Functions";
 import File from "./File";
 import ItemEditModal from "./ItemEditModal.js";
 
@@ -17,6 +18,10 @@ class FileList extends Component {
       ]
     };
     this.indexID = 1;
+  }
+
+  componentDidMount() {
+    getObjects();
   }
 
   /**

@@ -1,1 +1,28 @@
-https://serverless-stack.com/chapters/facebook-login-with-cognito-using-aws-amplify.html
+[facebook login](https://serverless-stack.com/chapters/facebook-login-with-cognito-using-aws-amplify.html)
+
+[download s3 object](https://stackoverflow.com/questions/16799956/javascript-to-download-a-file-from-amazon-s3-bucket)
+  - `GetObject` API
+
+[list objects in s3 bucket](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#listObjects-property)
+  - `ListObjects` API
+
+[whoa](https://serverless-stack.com/chapters/create-a-login-page.html)
+- create an RDS table instead. We will store things in a table Users (name, email, password, ID)
+  - 
+  - S3 done
+  - cognito (no google/FB) done
+  - next steps: login + sign up page
+
+[facebook and google sign in](https://medium.com/wolox-driving-innovation/integrating-social-media-to-your-app-with-aws-cognito-8943329aa89b)
+
+
+- pool id: us-west-2_UdZYHtMrO
+- Pool ARN: arn:aws:cognito-idp:us-west-2:907407725874:userpool/us-west-2_UdZYHtMrO
+- app client id: 45rn14gl0p766nv0e6ej7p3all
+
+
+# after sign up login done
+- work on s3 upload + list for autheniticated people
+- RDS table
+- FB + Google Login 
+

@@ -23,7 +23,7 @@ class Navigation extends Component {
       { name: "View Files", link: "/" },
     ],
     accountOptions: [
-      { name: "Log Out", link: "/" }
+      { name: "Log Out", link: "/login" }
     ]
   };
 
@@ -65,8 +65,7 @@ class Navigation extends Component {
                     return (
                       <DropdownItem key={index}>
                         <NavLink
-                          href={option.link}
-                          target="_blank">
+                          href={option.link}>
                           {option.name}
                         </NavLink>
                       </DropdownItem>
