@@ -7,6 +7,7 @@ import {
   Input,
   Spinner
 } from "reactstrap";
+import { addUserToRDS, getAuthInfo } from '../backend/AuthFunctions';
 import { Auth } from "aws-amplify";
 
 export default function Signup(props) {
@@ -37,9 +38,7 @@ export default function Signup(props) {
 
   async function handleSubmit(event) {
     event.preventDefault();
-
     setLoading(true);
-
     try {
       const newUser = await Auth.signUp({
         username: email,
@@ -51,21 +50,18 @@ export default function Signup(props) {
       alert(e.message);
       setLoading(false);
     }
-
     setNewUser("test");
-
     setLoading(false);
   }
 
   async function handleConfirmationSubmit(event) {
     event.preventDefault();
     setLoading(true);
-
     try {
       await Auth.confirmSignUp(email, confirmationCode);
       await Auth.signIn(email, password);
-
       props.setAuthenticated(true);
+      addUserToRDS(await getAuthInfo());
       props.history.push("/");
     } catch (e) {
       alert(e.message);

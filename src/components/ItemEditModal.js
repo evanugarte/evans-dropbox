@@ -205,7 +205,7 @@ class ItemEditModal extends Component {
         >
           <Form>
             <ModalHeader toggle={this.props.toggleShowEditModal}>
-              <h2>Edit Item</h2>
+              Edit Item
               <Button onClick={this.toggleEditMode}>Edit</Button>
             </ModalHeader>
             <ModalBody>

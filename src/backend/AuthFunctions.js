@@ -1,27 +1,14 @@
 import { Auth } from "aws-amplify";
 
-export async function handleSignIn(email, password) {
-  try {
-    await Auth.signIn(email, password);
-    alert("Logged in");
-  } catch (e) {
-    alert(e.message);
-  }
+// http://ec2-52-38-99-2.us-west-2.compute.amazonaws.com:4000/users/
+
+export function addUserToRDS(id) {
+  fetch(`http://ec2-52-38-99-2.us-west-2.compute.amazonaws.com:4000/users/add?id=${id}`)
+    .catch((err) => { console.log(err) });
 }
 
-export async function handleLogout() {
-  await Auth.signOut();
-}
 
-export async function getAuthStatus() {
-  try {
-    await Auth.currentSession();
-    return true;
-  }
-  catch (e) {
-    if (e !== 'No current user') {
-      alert(e);
-    }
-  }
-  return false;
+export async function getAuthInfo() {
+  let x = await Auth.currentUserCredentials(); 
+  return x.data.IdentityId;
 }

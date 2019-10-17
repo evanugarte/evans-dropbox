@@ -25,8 +25,24 @@
 
 # after sign up login done
 - work on s3 upload + list for autheniticated people
+  - [api docs, how to do protected ](https://aws-amplify.github.io/docs/js/storage)
+  - maybe just make it public but you cant get to it unless u sign in 
+  - store regular and admin on different tables.
+- first do get/upload (need date).
+- then policy for segregated users
+- then lambda
 - RDS table
 - FB + Google Login 
+
+# What we on
+- RDS ready to go to use
+  - write handlers for user (done)
+- write handles for objects (id -> object key)
+  - lets us show only objects we want (w/ updated time etc)
+  - e.g. onload call handler with user id from `Auth`, return list of keys
+- FB Goog
+- deploy
+- woo
 
 ## Stopped at
 - https://serverless-stack.com/chapters/load-the-state-from-the-session.html
