@@ -7,6 +7,16 @@ export async function addUserToRDS(newUser) {
     .catch((err) => { console.log(err) });
 }
 
+export async function checkIfUserExists(userId) {
+  let exists = false;
+  await fetch(`http://ec2-54-203-103-43.us-west-2.compute.amazonaws.com:4000/` +
+    `users?id=${userId}`)
+    .then((response) => response.json())
+    .then((response) => { exists = response.exists; })
+    .catch((err) => { console.log(err) });
+  return exists;
+}
+
 export async function checkIfUserIsAdmin(userId) {
   let isAdmin = false;
   await fetch(`http://ec2-54-203-103-43.us-west-2.compute.amazonaws.com:4000/` +
@@ -32,7 +42,6 @@ export async function getUserFiles(userId) {
     .then((response) => response.json())
     .then((response) => {
       objs = response.data;
-      console.log(objs);
     })
     .catch((err) => { console.log(err) });
   return objs;

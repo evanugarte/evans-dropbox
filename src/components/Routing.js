@@ -18,6 +18,7 @@ function Routing({ appProps }) {
 
   useEffect(() => {
     getAdminStatus();
+    // eslint-disable-next-line
   }, []);
 
   async function getAdminStatus() {

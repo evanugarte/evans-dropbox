@@ -31,16 +31,16 @@ function UploadView(appProps) {
 
   useEffect(() => {
     storeUserId();
+    // eslint-disable-next-line
   }, []);
 
   async function storeUserId() {
-    if(!appProps.authenticated) return;
+    if (!appProps.authenticated) return;
     setUserId(await getAuthInfo());
   }
 
   async function uploadFile() {
     let fileId = await uploadObject(file);
-    console.log("upload file: s3 done ", fileId);
     await addFileToTable({
       userId: userId,
       fileId: fileId.key,
@@ -48,7 +48,7 @@ function UploadView(appProps) {
       size: size,
       description: description
     });
-    console.log("upload file: rds done");
+    alert("file sucessfully uploaded.")
   }
 
   function onFileChange(e) {

@@ -20,7 +20,7 @@ function NewModal(props) {
   const [showModal, toggleModal] = useState(false);
   const [showSavedOrDeletedModal, toggleSavedOrDeletedModal] = useState(false);
   const [fileValid, setFileValid] = useState(true);
-  const [size, setSize] = useState(true);
+  const [size, setSize] = useState(0);
   const [description, setDescription] = useState("");
 
   useEffect(() => {
@@ -28,7 +28,7 @@ function NewModal(props) {
   });
 
   async function getUserId() {
-    if(!props.showEditModal) return;
+    if (!props.showEditModal) return;
     setUserId(await getAuthInfo());
   }
 
@@ -52,10 +52,10 @@ function NewModal(props) {
 
   function onFileChange(e) {
     if (!e.target.files[0]) return;
-    setFile(e.target.files[0]);
     if (e.target.files[0].size > 1e7) {
       setFileValid(false);
     } else {
+      setFile(e.target.files[0]);
       setSize(e.target.files[0].size);
       if (!fileValid) {
         setFileValid(true);
@@ -67,8 +67,6 @@ function NewModal(props) {
     deleteObject(props.item.file_id);
     deleteFile(userId, props.item.entry_id);
     toggleSavedOrDeletedModal(true);
-    // eslint-disable-next-line no-restricted-globals
-    // location.reload();
   }
 
   function isUpdated(newVal, oldVal) {
@@ -88,10 +86,10 @@ function NewModal(props) {
       title: isUpdated(title.trim(), props.item.title.trim()),
       fileName: fileId ? fileId.key : "",
       size: isUpdated(size, props.item.size),
-      description: isUpdated(description.trim(), props.item.description.trim())
+      description: isUpdated(description.trim(),
+        props.item.description.trim())
     };
-    console.log(newData);
-
+    console.log("MOM! ", newData);
     updateFile(newData);
     toggleSavedOrDeletedModal(true);
     setItemExists(true);
@@ -120,15 +118,15 @@ function NewModal(props) {
         toggle={() => toggleModal(!showModal)}
       >
         <ModalHeader>
-            Item {itemExists ? "Saved" : "Deleted"}.
+          Item {itemExists ? "Saved" : "Deleted"}.
           </ModalHeader>
-          <ModalFooter>
-                <Button
-                  // eslint-disable-next-line no-restricted-globals
-                  onClick={() => {location.reload()}}>
-                    Close
+        <ModalFooter>
+          <Button
+            // eslint-disable-next-line no-restricted-globals
+            onClick={() => { location.reload() }}>
+            Close
                 </Button>
-          </ModalFooter>
+        </ModalFooter>
       </Modal>
       <Modal
         isOpen={props.showEditModal}

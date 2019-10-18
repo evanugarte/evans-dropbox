@@ -1,62 +1,75 @@
-import React, { useState, useEffect } from "react";
+import React, { Component } from "react";
 import { Container, ListGroup } from "reactstrap";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { getUserFiles } from "../backend/RDSFunctions";
-import { getAuthInfo } from "../backend/AuthFunctions";
+import { getAuthInfo, isAdmin } from "../backend/AuthFunctions";
 import File from "./File";
 import NewModal from "./NewModal.js";
 
-function FileList(appProps) {
-  const [modalShown, setModalShown] = useState(false);
-  const [itemToEdit, setItemToEdit] = useState(null);
-  const [items, setItems] = useState(null);
+class FileList extends Component {
 
-  useEffect(() => {
-    renderObjects();
-  }, []);
+  constructor(props) {
+    super(props);
+    this.state = {
+      modalShown: false,
+      itemToEdit: null,
+      items: [],
+      adminStatus: false
+    };
+  }
 
-  async function renderObjects() {
-    if(!appProps.authenticated) return;
+  componentDidMount() {
+    this.renderObjects();
+  }
+
+  renderObjects = async () => {
     let returnedId = await getAuthInfo();
-    setItems(await getUserFiles(returnedId));
+    let adminStatus = await isAdmin();
+    let userFiles = await getUserFiles(returnedId);
+    this.setState({
+      adminStatus: adminStatus,
+      items: userFiles
+    });
   }
 
   /**
    * This function opens the edit modal with the item to edit
    * @param item an item object
    */
-  function toggleShowEditModal(item) {
-    console.log("lol");
-    
-    setItemToEdit(item);
-    setModalShown(true);
+  toggleShowEditModal = (item) => {
+    this.setState({
+      itemToEdit: item,
+      modalShown: true
+    });
   };
 
   /**
    * Render the class component
    */
-  return (
-    <Container>
-      <NewModal showEditModal={modalShown} item={itemToEdit} />
-      <ListGroup>
-        <TransitionGroup>
-          {items && items.map((item, index) => {
-            return (
-              <React.Fragment key={index}>
-                <CSSTransition timeout={500} classNames="fade">
-                  <File
-                    id={index % 2}
-                    item={item}
-                    toggleShowEditModal={toggleShowEditModal}
-                  />
-                </CSSTransition>
-              </React.Fragment>
-            );
-          })}
-        </TransitionGroup>
-      </ListGroup>
-    </Container>
-  );
+  render() {
+    return (
+      <Container>
+        <NewModal showEditModal={this.state.modalShown} item={this.state.itemToEdit} />
+        <ListGroup>
+          <TransitionGroup>
+            {this.state.items.map((item, index) => {
+              return (
+                <React.Fragment key={index}>
+                  <CSSTransition timeout={500} classNames="fade">
+                    <File
+                      item={item}
+                      isAdmin={this.state.adminStatus}
+                      toggleShowEditModal={this.toggleShowEditModal}
+                    />
+                  </CSSTransition>
+                </React.Fragment>
+              );
+            })}
+          </TransitionGroup>
+        </ListGroup>
+      </Container>
+    );
+  }
 }
 
 export default FileList;

@@ -28,10 +28,6 @@ function App(props) {
   const [authenticated, setAuthenticated] = useState(false);
   const [isAuthenticating, setIsAuthenticating] = useState(true);
 
-  useEffect(() => {
-    getAuthStatus();
-  });
-
   async function getAuthStatus() {
     try {
       await Auth.currentSession();
@@ -45,6 +41,10 @@ function App(props) {
     setIsAuthenticating(false);
   }
 
+
+  useEffect(() => {
+    getAuthStatus();
+  });
 
   async function handleLogout() {
     await Auth.signOut();

@@ -60,8 +60,6 @@ function Navigation(props) {
     }
   }
 
-  console.log(props);
-
   return (
     <Navbar color="dark" dark={true} expand="sm">
       <Container>
