@@ -1,47 +1,52 @@
-import React, { Component } from "react";
+import React from "react";
 import { ListGroupItem, Row, Col, Button } from "reactstrap";
 import { CSSTransition } from "react-transition-group";
 
-class File extends Component {
-  state = this.props.item;
-
-  toggleShowEditModal = (item) => {
-    this.props.toggleShowEditModal(item);
+export function File(props) {
+  
+  function toggleShowEditModal(item) {
+    console.log("jhi");
+    props.toggleShowEditModal(item);
   };
 
   /**
    * Render the class component
    */
-  render() {
-    return (
-      <CSSTransition key={this.state._id} timeout={500} classNames="fade">
-        <React.Fragment>
-          <ListGroupItem id={`itemtype-${this.props.id}`}>
-            <div style={{ display: "inline-block", width: "90%" }}>
-              <div style={{ float: "left" }}>
-                <Row>
-                  <h3>{this.state.name}</h3>
-                </Row>
-                <Row>
-                  <Col>
-                    <p>Quantity: {this.state.quantity}</p>
-                  </Col>
-                  <Col>
-                    <p>Sale Price: {(this.state.sellPrice)}</p>
-                  </Col>
-                </Row>
-                <Row>
-                  {! this.state.description ? <p style={{ fontStyle: "italic" }}>{this.state.description} </p> : ""}
-                </Row>
-              </div>
-              <Button className={"btn btn-info float-right"} onClick={this.props.toggleShowEditModal.bind(this, this.state)}>Edit</Button>
+  return (
+    <CSSTransition timeout={500} classNames="fade">
+      <React.Fragment>
+        <ListGroupItem id={`itemtype-${props.item.key}`}>
+          <div style={{ display: "inline-block", width: "90%" }}>
+            <div style={{ float: "left" }}>
+              <Row>
+                <h3>{props.item.title}</h3>
+              </Row>
+              <Row>
+                <Col>
+                  <p>Size: {props.item.size} bytes</p>
+                </Col>
+                <Col>
+                  <p>Last Modified: {props.item.updated_time.toString()}</p>
+                </Col>
+                <Col>
+                  <p>Uploaded: {props.item.uploaded_time.toString()}</p>
+                </Col>
+              </Row>
+              <Row>
+                {props.item.description ? <p style={{ fontStyle: "italic" }}>
+                  {props.item.description} </p> : ""}
+              </Row>
             </div>
-          </ListGroupItem>
+            <Button className={"btn btn-info float-right"}
+              onClick={() => toggleShowEditModal(props.item)}>
+              Info
+            </Button>
+          </div>
+        </ListGroupItem>
 
-        </React.Fragment>
-      </CSSTransition>
-    );
-  }
+      </React.Fragment>
+    </CSSTransition>
+  );
 }
 
 export default File;

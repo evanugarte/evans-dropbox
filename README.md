@@ -39,11 +39,50 @@
   - write handlers for user (done)
 - write handles for objects (id -> object key)
   - lets us show only objects we want (w/ updated time etc)
+  - table for files (uploader)
   - e.g. onload call handler with user id from `Auth`, return list of keys
 - FB Goog
 - deploy
 - woo
 
+# Uplaod
+- write handler functions: remove file, 
+- have description field `metadata: {key: 'value}` in `Storage.put`
+  - also metadata for true file name?
+  - render text field for description.
+- write RDS function to get all user's keys, then we talk to s3 with the list of keys
+
+# deferred
+- check admin when admin logs in
+- fb + goog
+  - get first/last name from it
+
 ## Stopped at
 - https://serverless-stack.com/chapters/load-the-state-from-the-session.html
   - update state somehow lol
+
+# aight
+<!-- - isAdmin  -->
+- download objects
+  - we gotta get objects downloaded. would the key work? check.
+- get objects for certain user
+- admin view
+- login w fb + goog
+
+## Friday
+- deploy
+- scaling group, elb, cloudfront, r53
+- video and pdf explanation
+
+```sql
+CREATE TABLE files (
+    entry_id int AUTO_INCREMENT PRIMARY KEY,
+    file_id varchar(255) NOT NULL,
+    user_id varchar(255) NOT NULL,
+    title varchar(255) NOT NULL,
+    description TEXT,
+    size int NOT NULL,
+    uploaded_time varchar(255),
+    updated_time varchar(255)
+);
+```

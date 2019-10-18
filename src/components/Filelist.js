@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { Container, ListGroup } from "reactstrap";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
-import { getObjects } from "../backend/S3Functions";
+import { getUserFiles } from "../backend/RDSFunctions";
+import { getAuthInfo } from "../backend/AuthFunctions";
 import File from "./File";
-import ItemEditModal from "./ItemEditModal.js";
+import NewModal from "./NewModal.js";
 
 function FileList() {
   const [modalShown, setModalShown] = useState(false);
   const [itemToEdit, setItemToEdit] = useState(null);
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState(null);
 
   useEffect(() => {
     renderObjects();
-  });
+  }, []);
 
   async function renderObjects() {
-    let objs = await getObjects();
+    let returnedId = await getAuthInfo();
+    let objs = await getUserFiles(returnedId);
     setItems(objs);
   }
 
@@ -24,8 +26,10 @@ function FileList() {
    * @param item an item object
    */
   function toggleShowEditModal(item) {
+    console.log("lol");
+    
     setItemToEdit(item);
-    setModalShown(!modalShown);
+    setModalShown(true);
   };
 
   /**
@@ -46,16 +50,15 @@ function FileList() {
    */
   return (
     <Container>
-      <ItemEditModal showEditModal={modalShown} item={itemToEdit} />
+      <NewModal showEditModal={modalShown} item={itemToEdit} />
       <ListGroup>
         <TransitionGroup>
-          {items.map((item, index) => {
+          {items && items.map((item, index) => {
             return (
               <React.Fragment key={index}>
                 <CSSTransition timeout={500} classNames="fade">
                   <File
                     id={index % 2}
-                    key={item.name}
                     item={item}
                     toggleShowEditModal={toggleShowEditModal}
                   />

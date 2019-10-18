@@ -1,17 +1,53 @@
-import React, { useState } from "react";
-import { Container, Button, Row } from "reactstrap";
-import { handleS3Upload } from "../backend/S3Functions";
+import React, { useState, useEffect } from "react";
+import { Container, Button, Row, Input } from "reactstrap";
 import { getAuthInfo } from "../backend/AuthFunctions";
+import { uploadObject } from "../backend/S3Functions";
+import { addFileToTable } from "../backend/RDSFunctions";
 
 function UploadView() {
-  const [file, setFile] = useState(undefined);
+  const [title, setTitle] = useState("");
+  const [file, setFile] = useState();
+  const [size, setSize] = useState();
+  const [description, setDescription] = useState("");
   const [fileValid, setFileValid] = useState(true);
+  const [userId, setUserId] = useState();
 
+  const fields = [
+    <p>upload here!</p>,
+    <Input placeholder="File Title (optional)"
+      onChange={(e) => setTitle(e.target.value)} />,
+    <Input type="file" onChange={onFileChange} />,
+    <Input
+      placeholder="Description (optional)"
+      type="textarea" onChange={
+        (e) => setDescription(e.target.value)} />,
+    <Button
+      color={fileValid ? "primary" : "danger"}
+      disabled={!isUploadAllowed()}
+      onClick={async () => await uploadFile(file)}>
+      {fileValid ? "Upload" : "File too large (>10MB)."}
+    </Button>,
+  ];
+
+  useEffect(() => {
+    storeUserId();
+  }, []);
+
+  async function storeUserId() {
+    setUserId(await getAuthInfo());
+  }
 
   async function uploadFile() {
-    let x = await getAuthInfo();
-    console.log(x.data.IdentityId);
-    handleS3Upload(x.data.IdentityId, file);
+    let fileId = await uploadObject(file);
+    console.log("upload file: s3 done ", fileId);
+    await addFileToTable({
+      userId: userId,
+      fileId: fileId.key,
+      title: title ? title : file.name,
+      size: size,
+      description: description
+    });
+    console.log("upload file: rds done");
   }
 
   function onFileChange(e) {
@@ -20,6 +56,7 @@ function UploadView() {
     if (e.target.files[0].size > 1e7) {
       setFileValid(false);
     } else {
+      setSize(e.target.files[0].size);
       if (!fileValid) {
         setFileValid(true);
       }
@@ -32,20 +69,13 @@ function UploadView() {
 
   return (
     <Container>
-      <p>
-        upload here!
-        </p>
-      <Row>
-        <input type="file" onChange={onFileChange} />
-      </Row>
-      <Row>
-        <Button
-          color={fileValid ? "primary" : "danger"}
-          disabled={!isUploadAllowed()}
-          onClick={() => uploadFile(file)}>
-          {fileValid ? "Upload" : "File too large (>10MB)."}
-        </Button>
-      </Row>
+      {fields.map((x, index) => {
+        return (
+          <Row key={index} style={{ width: "50%", padding: 10 }}>
+            {x}
+          </Row>
+        );
+      })}
     </Container>
   );
 }

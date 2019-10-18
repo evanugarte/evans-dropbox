@@ -7,12 +7,15 @@ import {
   Input,
   Spinner
 } from "reactstrap";
-import { addUserToRDS, getAuthInfo } from '../backend/AuthFunctions';
+import { getAuthInfo } from '../backend/AuthFunctions';
+import { addUserToRDS } from '../backend/RDSFunctions';
 import { Auth } from "aws-amplify";
 
 export default function Signup(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [confirmationCode, setConfirmationCode] = useState("");
   const [newUser, setNewUser] = useState(null);
@@ -20,6 +23,8 @@ export default function Signup(props) {
 
   const forms = [
     { text: "Email", type: "email", callback: setEmail },
+    { text: "First Name", type: "text", callback: setFirstName },
+    { text: "Last Name", type: "text", callback: setLastName },
     { text: "Password", type: "password", callback: setPassword },
     { text: "Confirm Password", type: "password", callback: setPasswordConfirm }
   ];
@@ -28,6 +33,8 @@ export default function Signup(props) {
     return (
       email.length > 0 &&
       password.length > 0 &&
+      firstName.length > 0 &&
+      lastName.length > 0 &&
       password === passwordConfirm
     );
   }
@@ -61,7 +68,12 @@ export default function Signup(props) {
       await Auth.confirmSignUp(email, confirmationCode);
       await Auth.signIn(email, password);
       props.setAuthenticated(true);
-      addUserToRDS(await getAuthInfo());
+      const newUser = {
+        userId: await getAuthInfo(),
+        firstName: firstName,
+        lastName: lastName
+      };
+      await addUserToRDS(newUser);
       props.history.push("/");
     } catch (e) {
       alert(e.message);

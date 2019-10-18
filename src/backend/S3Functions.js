@@ -1,18 +1,21 @@
 import { Storage } from "aws-amplify";
 
-
 ///////// FUNCTIONS /////////
-export async function handleS3Upload(userId, file) {
-  console.log(userId);
-  
-  const filename = `${Date.now()}-${file.name}`;
+export async function updateObject(newFile, oldKey) {
+  await deleteObject(oldKey);
+  return await uploadObject(newFile);
+}
 
-  const s3Response = await Storage.put(filename, file, {
+export async function deleteObject(key) {
+  await Storage.remove(key)
+    .catch(err => console.log(err));
+}
+
+export async function uploadObject(file) {
+  const filename = `${Date.now()}-${file.name}`;
+  return await Storage.put(filename, file, {
     contentType: file.type
   });
-
-  console.log(s3Response);
-  return s3Response.key;
 }
 
 export async function getObjects() {
