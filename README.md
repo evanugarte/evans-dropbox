@@ -34,40 +34,12 @@
 - RDS table
 - FB + Google Login 
 
-# What we on
-- RDS ready to go to use
-  - write handlers for user (done)
-- write handles for objects (id -> object key)
-  - lets us show only objects we want (w/ updated time etc)
-  - table for files (uploader)
-  - e.g. onload call handler with user id from `Auth`, return list of keys
-- FB Goog
-- deploy
-- woo
-
-# Uplaod
-- write handler functions: remove file, 
-- have description field `metadata: {key: 'value}` in `Storage.put`
-  - also metadata for true file name?
-  - render text field for description.
-- write RDS function to get all user's keys, then we talk to s3 with the list of keys
-
-# deferred
-- check admin when admin logs in
-- fb + goog
-  - get first/last name from it
-
-## Stopped at
-- https://serverless-stack.com/chapters/load-the-state-from-the-session.html
-  - update state somehow lol
-
 # aight
-<!-- - isAdmin  -->
-- download objects
-  - we gotta get objects downloaded. would the key work? check.
-- get objects for certain user
 - admin view
+  - send in a param to make sure we aren't redirecting
+  - custom query rendering
 - login w fb + goog
+  - get first/last name from it
 
 ## Friday
 - deploy
@@ -85,4 +57,8 @@ CREATE TABLE files (
     uploaded_time varchar(255),
     updated_time varchar(255)
 );
+```
+
+```sql
+select a.first_name, a.last_name, a.id, b.* from users a, files b where a.id = b.user_id;
 ```

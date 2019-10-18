@@ -1,13 +1,18 @@
 import React from "react";
 import { ListGroupItem, Row, Col, Button } from "reactstrap";
 import { CSSTransition } from "react-transition-group";
+import { getDownloadUrl } from "../backend/S3Functions";
 
 export function File(props) {
   
   function toggleShowEditModal(item) {
-    console.log("jhi");
     props.toggleShowEditModal(item);
   };
+
+  async function downloadFile() {
+    let url = await getDownloadUrl(props.item.file_id);
+    window.open(url);
+  }
 
   /**
    * Render the class component
@@ -37,6 +42,10 @@ export function File(props) {
                   {props.item.description} </p> : ""}
               </Row>
             </div>
+            <Button className={"btn btn-warning float-right"}
+              onClick={async () => await downloadFile()}>
+              Download
+            </Button>
             <Button className={"btn btn-info float-right"}
               onClick={() => toggleShowEditModal(props.item)}>
               Info

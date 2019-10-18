@@ -7,6 +7,16 @@ export async function addUserToRDS(newUser) {
     .catch((err) => { console.log(err) });
 }
 
+export async function checkIfUserIsAdmin(userId) {
+  let isAdmin = false;
+  await fetch(`http://ec2-54-203-103-43.us-west-2.compute.amazonaws.com:4000/` +
+    `users?id=${userId}`)
+    .then((response) => response.json())
+    .then((response) => { isAdmin = response.isAdmin; })
+    .catch((err) => { console.log(err) });
+  return isAdmin;
+}
+
 export async function addFileToTable(fileData) {
   const { userId, fileId, title, description, size } = fileData;
   fetch(`http://ec2-54-203-103-43.us-west-2.compute.amazonaws.com:4000/` +
@@ -22,6 +32,7 @@ export async function getUserFiles(userId) {
     .then((response) => response.json())
     .then((response) => {
       objs = response.data;
+      console.log(objs);
     })
     .catch((err) => { console.log(err) });
   return objs;
@@ -47,9 +58,6 @@ export async function updateFile(newFileData) {
   fileName = fileName ? fileName : "";
   size = size ? size : "";
   description = description ? description : "";
-  console.log(description);
-
-
   await fetch(`http://ec2-54-203-103-43.us-west-2.compute.amazonaws.com:4000/` +
     `files/update?entryId=${entryId}&userId=${userId}&fileId=${fileName}` +
     `&title=${title}&description=${description}&size=${size}`)

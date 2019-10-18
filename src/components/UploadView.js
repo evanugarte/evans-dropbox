@@ -4,7 +4,7 @@ import { getAuthInfo } from "../backend/AuthFunctions";
 import { uploadObject } from "../backend/S3Functions";
 import { addFileToTable } from "../backend/RDSFunctions";
 
-function UploadView() {
+function UploadView(appProps) {
   const [title, setTitle] = useState("");
   const [file, setFile] = useState();
   const [size, setSize] = useState();
@@ -34,6 +34,7 @@ function UploadView() {
   }, []);
 
   async function storeUserId() {
+    if(!appProps.authenticated) return;
     setUserId(await getAuthInfo());
   }
 

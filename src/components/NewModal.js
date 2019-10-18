@@ -25,9 +25,10 @@ function NewModal(props) {
 
   useEffect(() => {
     getUserId();
-  }, []);
+  });
 
   async function getUserId() {
+    if(!props.showEditModal) return;
     setUserId(await getAuthInfo());
   }
 

@@ -5,10 +5,10 @@ export function PrivateRoute({ component: Component, appProps, ...params }) {
   return (
     <Route
       {...params}
-      render={(props) => appProps.authenticated ? <Component
+      render={(props) => appProps.allowed ? <Component
         {...appProps} {...props} /> : <Redirect
           to={{
-            pathname: '/login',
+            pathname: appProps.redirect ? appProps.redirect : '/login',
             state: { from: props.location }
           }}
         />}

@@ -21,3 +21,7 @@ export async function uploadObject(file) {
 export async function getObjects() {
   return await Storage.list("");
 }
+
+export async function getDownloadUrl(key) {
+  return await Storage.get(key);
+}

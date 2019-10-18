@@ -6,7 +6,7 @@ import { getAuthInfo } from "../backend/AuthFunctions";
 import File from "./File";
 import NewModal from "./NewModal.js";
 
-function FileList() {
+function FileList(appProps) {
   const [modalShown, setModalShown] = useState(false);
   const [itemToEdit, setItemToEdit] = useState(null);
   const [items, setItems] = useState(null);
@@ -16,9 +16,9 @@ function FileList() {
   }, []);
 
   async function renderObjects() {
+    if(!appProps.authenticated) return;
     let returnedId = await getAuthInfo();
-    let objs = await getUserFiles(returnedId);
-    setItems(objs);
+    setItems(await getUserFiles(returnedId));
   }
 
   /**
@@ -31,19 +31,6 @@ function FileList() {
     setItemToEdit(item);
     setModalShown(true);
   };
-
-  /**
-   * This function checks if the inventory is empty.
-   * If so, it returns a small p tag telling the user.
-   */
-  // function handleEmptyInventory() {
-  //   //checks if the items array length is 0
-  //   if (items.length === 0) {
-  //     return <p>Your list is empty. Try refreshing the page or adding an item.</p>;
-  //   } else {
-  //     return;
-  //   }
-  // }
 
   /**
    * Render the class component

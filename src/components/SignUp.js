@@ -90,7 +90,7 @@ export default function Signup(props) {
             autoFocus
             type="tel"
             onChange={setConfirmationCode}
-            value={confirmationCode}
+            placeholder="Enter 6 digit code here..."
           />
           <Label>Please check your email for the code.</Label>
         </FormGroup>
