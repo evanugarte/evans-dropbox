@@ -1,68 +1,102 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[facebook login](https://serverless-stack.com/chapters/facebook-login-with-cognito-using-aws-amplify.html)
 
-## Available Scripts
+[download s3 object](https://stackoverflow.com/questions/16799956/javascript-to-download-a-file-from-amazon-s3-bucket)
+  - `GetObject` API
 
-In the project directory, you can run:
+[list objects in s3 bucket](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#listObjects-property)
+  - `ListObjects` API
 
-### `yarn start`
+[whoa](https://serverless-stack.com/chapters/create-a-login-page.html)
+- create an RDS table instead. We will store things in a table Users (name, email, password, ID)
+  - 
+  - S3 done
+  - cognito (no google/FB) done
+  - next steps: login + sign up page
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+[facebook and google sign in](https://medium.com/wolox-driving-innovation/integrating-social-media-to-your-app-with-aws-cognito-8943329aa89b)
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+[tokens over state variables for react](https://stackoverflow.com/questions/49819183/react-what-is-the-best-way-to-handle-login-and-authentication)
 
-### `yarn test`
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- pool id: us-west-2_UdZYHtMrO
+- Pool ARN: arn:aws:cognito-idp:us-west-2:907407725874:userpool/us-west-2_UdZYHtMrO
+- app client id: 45rn14gl0p766nv0e6ej7p3all
 
-### `yarn build`
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# after sign up login done
+- work on s3 upload + list for autheniticated people
+  - [api docs, how to do protected ](https://aws-amplify.github.io/docs/js/storage)
+  - maybe just make it public but you cant get to it unless u sign in 
+  - store regular and admin on different tables.
+- first do get/upload (need date).
+- then policy for segregated users
+- then lambda
+- RDS table
+- FB + Google Login 
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+# aight
+- login w fb + goog
+- get first/last name from it
+  - check user if its in `users` table
+  - if not show modal.
+  - if so show modal, 
+  - submit will add user to db, and cancel button will log user out
+- lambda for new user to enter into users table
+  - [do this](https://stackoverflow.com/questions/33659059/invoke-amazon-lambda-function-from-node-app)
+  - refactor existing code. after onto config in cloud we are done!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Friday
+- deploy
+- scaling group, elb, cloudfront, r53
 
-### `yarn eject`
+# video
+- video and pdf explanation
+  - create account, add file
+    - show it rendered
+      - edit it
+    - add another file
+      - delete it
+  - log into an existing non admin account
+    - create file
+    - create file to be deleted by admin
+  - log into admin
+    - show that you can see everything and not upload.
+    - delete the file that was named to be deleted
+  - sign back into existing
+    - show that that file was deleted.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```sql
+CREATE TABLE files (
+    entry_id int AUTO_INCREMENT PRIMARY KEY,
+    file_id varchar(255) NOT NULL,
+    user_id varchar(255) NOT NULL,
+    title varchar(255) NOT NULL,
+    description TEXT,
+    size int NOT NULL,
+    uploaded_time varchar(255),
+    updated_time varchar(255)
+);
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```sql
+select a.first_name, a.last_name, a.id, b.* from users a, files b where a.id = b.user_id;
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+https://medium.com/@uriklar/hosting-a-react-app-using-s3-cloudfront-with-continuous-deployment-using-circleci-89a921f74b82
+https://serverless-stack.com/chapters/facebook-login-with-cognito-using-aws-amplify.html
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+# final boss battle
+- use npm [facebook button](https://www.npmjs.com/package/react-facebook-login)
+  - try federated login with whatever the response gives you with `callback`
+- use npm [google button](https://www.npmjs.com/package/react-google-login)
+  - try federated login with whatever the response gives you with `onsuccess`
+- add both to RDS if they dont exist (function for that is done)
+  - figure out how to enter name ([splice on the first space](https://stackoverflow.com/questions/10272773/split-string-on-the-first-white-space-occurrence)).
+- lambda for adding new users ONLY
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+- holy shit did we do it
+- deploy (cloudfront, ELB, Scaling group)
+- diagrams
+- Video
