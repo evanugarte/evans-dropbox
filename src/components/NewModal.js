@@ -89,7 +89,6 @@ function NewModal(props) {
       description: isUpdated(description.trim(),
         props.item.description.trim())
     };
-    console.log("MOM! ", newData);
     updateFile(newData);
     toggleSavedOrDeletedModal(true);
     setItemExists(true);
@@ -119,13 +118,13 @@ function NewModal(props) {
       >
         <ModalHeader>
           Item {itemExists ? "Saved" : "Deleted"}.
-          </ModalHeader>
+        </ModalHeader>
         <ModalFooter>
           <Button
             // eslint-disable-next-line no-restricted-globals
-            onClick={() => { location.reload() }}>
+            onClick={() => { location.reload(); }}>
             Close
-                </Button>
+          </Button>
         </ModalFooter>
       </Modal>
       <Modal

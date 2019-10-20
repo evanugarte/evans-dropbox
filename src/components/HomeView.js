@@ -7,7 +7,7 @@ function HomeView(appProps) {
     <div>
       <p>
         through the years, and shed so many tears
-        </p>
+      </p>
       <Filelist {...appProps} />
     </div>
   );

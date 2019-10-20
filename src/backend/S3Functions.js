@@ -7,8 +7,7 @@ export async function updateObject(newFile, oldKey) {
 }
 
 export async function deleteObject(key) {
-  await Storage.remove(key)
-    .catch(err => console.log(err));
+  await Storage.remove(key);
 }
 
 export async function uploadObject(file) {

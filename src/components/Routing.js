@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import HomeView from "./HomeView";
 import UploadView from "./UploadView";
-import NotFound from "./NotFound";
 import Login from "./Login";
 import SignUp from "./SignUp";
 import { PrivateRoute } from "./PrivateRoute";
@@ -46,16 +45,22 @@ function Routing({ appProps }) {
           return (
             <Route key={index} exact path={x.path}
               render={(props) => !appProps.authenticated ? <x.C
-                {...appProps} {...props} /> : <Redirect
+                {...appProps} {...props} /> :
+                <Route render={() => <Redirect
                   to={{
-                    pathname: '/',
+                    pathname: "/",
                     state: { from: props.location }
-                  }}
+                  }} />}
                 />}
             />
           );
         })}
-        <Route component={NotFound} />
+        <Route render={(props) => <Redirect
+          to={{
+            pathname: "/",
+            state: { from: props.location }
+          }} />}
+        />} />
       </Switch>
     </div>
   );

@@ -42,7 +42,7 @@ jobs:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
           name: "Test"
-          command: npm run test
+          command: npm run lint
   build:
     <<: *defaults
     steps:
@@ -50,26 +50,38 @@ jobs:
           key: source-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
-      - run: pwd && ls && echo lol    
-      - run: touch src/backend/config.js && base64 --decode $config_data > backend/config.js
+      - run:
+          name: "get config base64 encoding"
+          command: echo $config_data > .temp
+      - run:
+          name: "decode base64 stuff"
+          command: base64 --decode .temp > src/backend/config.js
       - run: 
           name: "Build app"
           command: npm run build
+      - save_cache:
+          key: source-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - "~/repo"
       - persist_to_workspace:
           root: ~/repo
           paths:
-            - dist
+            - build/*
             - package.json
   deploy:
     <<: *defaults
     environment:
-      - STAGING_BUCKET: arn:aws:s3:::172project1staging
-      - PRODUCTION_BUCKET: arn:aws:s3:::172project1wesite
-      - STAGING_DISTRIBUTION_ID: arn:aws:cloudfront::907407725874:distribution/E332K02TVSXERV
-      - PRODUCTION_DISTRIBUTION_ID: arn:aws:cloudfront::907407725874:distribution/EXH43QO1ICYWP
+      - STAGING_BUCKET: 172project1staging
+      - PRODUCTION_BUCKET: 172project1website
+      - STAGING_DISTRIBUTION_ID: E332K02TVSXERV
+      - PRODUCTION_DISTRIBUTION_ID: EXH43QO1ICYWP
     steps:
       - attach_workspace:
           at: ~/repo
+      - restore_cache:
+          key: source-{{ .Branch }}-{{ .Revision }}
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
       - run: sudo apt-get update && sudo apt-get install -y python-dev
       - run: sudo curl -O https://bootstrap.pypa.io/get-pip.py
       - run: sudo python get-pip.py
@@ -77,14 +89,13 @@ jobs:
       - run: aws --version
       - run: aws s3 ls
       - run: 
-          name: "Deploy to S3"
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              aws s3 sync dist/ s3://${PRODUCTION_BUCKET} --delete
-              aws cloudfront create-invalidation --distribution-id "${PRODUCTION_DISTRIBUTION_ID}" --paths /index.html
-            elif [ "${CIRCLE_BRANCH}" == "develop" ]; then
-              aws s3 sync dist/ s3://${STAGING_BUCKET} --delete
-              aws cloudfront create-invalidation --distribution-id "${STAGING_DISTREBUTION_ID}" --paths /index.html
+              aws s3 sync build/ s3://${PRODUCTION_BUCKET} --delete
+              cd build && aws cloudfront create-invalidation --distribution-id "${PRODUCTION_DISTRIBUTION_ID}" --paths /index.html
+            elif [ "${CIRCLE_BRANCH}" == "init" ]; then
+              aws s3 sync build/ s3://${STAGING_BUCKET} --delete
+              cd build && aws cloudfront create-invalidation --distribution-id "${STAGING_DISTRIBUTION_ID}" --paths /index.html
             fi
 workflows:
   version: 2

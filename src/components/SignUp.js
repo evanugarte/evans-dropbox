@@ -7,8 +7,8 @@ import {
   Input,
   Spinner
 } from "reactstrap";
-import { getAuthInfo } from '../backend/AuthFunctions';
-import { addUserToRDS } from '../backend/RDSFunctions';
+import { getAuthInfo } from "../backend/AuthFunctions";
+import { addUserToRDS } from "../backend/RDSFunctions";
 import { Auth } from "aws-amplify";
 
 export default function Signup(props) {

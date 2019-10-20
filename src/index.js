@@ -34,7 +34,7 @@ function App(props) {
       setAuthenticated(true);
     }
     catch (e) {
-      if (e !== 'No current user') {
+      if (e !== "No current user") {
         alert(e);
       }
     }

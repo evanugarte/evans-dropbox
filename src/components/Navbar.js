@@ -30,7 +30,7 @@ function Navigation(props) {
 
   async function getAdminStatus() {
     if(!props.authed) return;
-    setAdminStatus(await isAdmin())
+    setAdminStatus(await isAdmin());
   }
 
   function getDropDown() {
@@ -43,7 +43,7 @@ function Navigation(props) {
         >
           <DropdownToggle navbar="true" caret>
             Account Options
-                </DropdownToggle>
+          </DropdownToggle>
           <DropdownMenu dark="true">
             <DropdownItem>
               <NavLink

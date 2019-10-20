@@ -2,7 +2,7 @@ import React from "react";
 import { ListGroupItem, Row, Col, Button } from "reactstrap";
 import { CSSTransition } from "react-transition-group";
 import { getDownloadUrl } from "../backend/S3Functions";
-import { isAdmin } from "../backend/AuthFunctions";
+// import { isAdmin } from "../backend/AuthFunctions";
 
 export function File(props) {
   function toggleShowEditModal(item) {
@@ -24,7 +24,7 @@ export function File(props) {
           <Col>
             <h4>
               Uploaded by:
-          </h4>
+            </h4>
           </Col>
           <Col>
             <h5>last name: {lastName}</h5>
@@ -71,11 +71,11 @@ export function File(props) {
               <Button className={"btn btn-warning float-right"}
                 onClick={async () => await downloadFile()}>
                 Download
-            </Button>
+              </Button>
               <Button className={"btn btn-info float-right"}
                 onClick={() => toggleShowEditModal(props.item)}>
                 Info
-            </Button>
+              </Button>
             </Row>
           </div>
         </ListGroupItem>

@@ -13,7 +13,7 @@ export async function isAdmin() {
     return res;
   }
   catch (e) {
-    if (e !== 'No current user' && !e.includes("cannot get guest credentials")) {
+    if (e !== "No current user" && !e.includes("cannot get guest credentials")) {
       alert(e);
     }
     return false;

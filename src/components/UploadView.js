@@ -48,7 +48,7 @@ function UploadView(appProps) {
       size: size,
       description: description
     });
-    alert("file sucessfully uploaded.")
+    alert("file sucessfully uploaded.");
   }
 
   function onFileChange(e) {
